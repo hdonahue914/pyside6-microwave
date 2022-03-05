@@ -1,0 +1,19 @@
+TimeScreen
+{
+    background-color: black;
+}
+QLabel
+{
+    font-family: 'Titillium Web';
+    text-align: center;
+    color: white;
+    
+}
+QLabel#label_time
+{
+    font-size: 60pt;
+}
+QLabel#label_date
+{
+    font-size: 24pt;
+}
