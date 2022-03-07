@@ -13,9 +13,11 @@
 
 from datetime import datetime
 import sys
+import logging
 from PySide6 import QtWidgets, QtCore, QtGui
 from screens.time import TimeScreen
 
+logging.basicConfig(level=logging.DEBUG, format="%(filename)s[%(levelname)s]:%(lineno)s - %(message)s")
 
 DEFAULT_QUICK_PICK = ["Clock", "Timer", "Recipe"]
 UPDATE_TIME_INTERVAL: int = 1000
@@ -70,7 +72,7 @@ class Microwave(QtWidgets.QStackedWidget):
         if(self.timer_idle.isActive()):
             self.timer_idle.stop()
         self.timer_idle.singleShot(USER_IDLE_INTERVAL, self.go_idle)
-        print("Wake")
+        logging.debug("Wake")
 
     """
     method: get_time
@@ -115,6 +117,7 @@ class Microwave(QtWidgets.QStackedWidget):
     @QtCore.Slot()
     def user_wake(self):
         self.setCurrentIndex(SCREEN_INDEX_MAIN)
+        logging.info("User Wake")
 
     """
     slot: update_datetime
@@ -134,6 +137,7 @@ class Microwave(QtWidgets.QStackedWidget):
     @QtCore.Slot()
     def go_idle(self):
         self.setCurrentIndex(SCREEN_INDEX_IDLE)
+        logging.info("Going Idle")
 
 
     ############################
