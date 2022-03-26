@@ -16,6 +16,7 @@ import sys
 import logging
 from PySide6 import QtWidgets, QtCore, QtGui
 from screens.time import TimeScreen
+from screens.cook import CookScreen
 
 logging.basicConfig(level=logging.DEBUG, format="%(filename)s[%(levelname)s]:%(lineno)s - %(message)s")
 
@@ -50,16 +51,17 @@ class Microwave(QtWidgets.QStackedWidget):
     def setup_ui(self):        
         # Widgets
         self.screen_time = TimeScreen(self)
-        self.next_screen = QtWidgets.QWidget(self)
+        self.screen_cook = CookScreen(self)
         # Timers
         self.timer_update_time = QtCore.QTimer(self)
         self.timer_idle = QtCore.QTimer(self)
         # Configure StackWidget (inherited)
         self.setGeometry(100,100,480,640)
         self.addWidget(self.screen_time)
-        self.addWidget(self.next_screen)
+        self.addWidget(self.screen_cook)
         # Connect Signals/Slots
         self.screen_time.screen_pressed.connect(self.user_wake)
+        self.screen_cook.screen_pressed.connect(self.kick_idle_timer)
         # Initialize time
         self.screen_time.set_time(self.get_time())
         self.screen_time.set_date(self.get_date())
@@ -69,10 +71,7 @@ class Microwave(QtWidgets.QStackedWidget):
     brief: trigger singleshot idle timer on press events to kick go_idle
     """
     def mousePressEvent(self, event):
-        if(self.timer_idle.isActive()):
-            self.timer_idle.stop()
-        self.timer_idle.singleShot(USER_IDLE_INTERVAL, self.go_idle)
-        logging.debug("Wake")
+        self.kick_idle_timer()
 
     """
     method: get_time
@@ -118,6 +117,20 @@ class Microwave(QtWidgets.QStackedWidget):
     def user_wake(self):
         self.setCurrentIndex(SCREEN_INDEX_MAIN)
         logging.info("User Wake")
+
+    """
+    slot: kick_idle_timer
+    brief: reset the idle timer on any screen interaction
+    """
+    @QtCore.Slot()
+    def kick_idle_timer(self):
+        if(self.timer_idle.isActive() is not True):
+            logging.debug("restarting idle timer")
+            self.timer_idle.stop()
+        self.timer_idle.setInterval(USER_IDLE_INTERVAL)
+        self.timer_idle.timeout.connect(self.go_idle)
+        self.timer_idle.start()
+        logging.debug("Wake")
 
     """
     slot: update_datetime

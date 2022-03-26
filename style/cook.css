@@ -1,0 +1,32 @@
+CookScreen
+{
+    background-color: black;
+}
+QLabel
+{
+    font-family: 'Titillium Web';
+    text-align: center;
+    color: white;
+    
+}
+QLabel#cook_time
+{
+    font-size: 40pt;
+}
+QPushButton
+{
+    font-family: 'Titillium Web';
+    font-size: 20pt;
+    text-align: center;
+    color: white;
+    background-color: black;
+    border-radius: 10px;
+    border-width: 2px;
+    border-style: solid;
+    border-color: white;
+}
+QPushButton:pressed
+{
+    background-color: white;
+    color:black;
+}

@@ -6,7 +6,7 @@
 # author: hdonahue
 ##############################################
 
-from importlib.metadata import PackagePath
+
 import logging
 from PySide6 import QtWidgets, QtCore, QtGui
 
@@ -34,8 +34,9 @@ class TimeScreen(QtWidgets.QWidget):
     TODO: This could probably be moved to parent and track idle state
     """
     def mouseReleaseEvent(self, event: QtGui.QMouseEvent):
-        logging.debug("Pressed")
-        self.screen_pressed.emit()
+        if(self.isActiveWindow):
+            logging.debug("Pressed")
+            self.screen_pressed.emit()
 
     """
     method: setup_ui
